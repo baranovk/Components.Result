@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Components.Result
 {
     public class Result
@@ -147,8 +149,7 @@ namespace Components.Result
         #endregion
     }
 
-    [ResultOutput]
-    public class Result<TOutput> : Result
+    public class Result<TOutput> : Result, IResultOutput
     {
         #region Constructors
 
@@ -173,6 +174,7 @@ namespace Components.Result
 
         #region Properties
 
+        [JsonInclude]
         public TOutput? Output { get; protected set; }
 
         #endregion
@@ -219,7 +221,6 @@ namespace Components.Result
         #endregion
     }
 
-    [ResultOutput]
     public class Result<TOutput, TErrorType> : Result<TOutput> where TErrorType : struct
     {
         private ErrorDescription<TErrorType>? _errorDescription;
@@ -259,6 +260,7 @@ namespace Components.Result
 
         #endregion
 
+        [JsonIgnore]
         public new ErrorDescription<TErrorType>? ErrorDescription
         {
             get => _errorDescription;
@@ -270,8 +272,10 @@ namespace Components.Result
             }
         }
 
+        [JsonIgnore]
         public new bool IsSuccess => null != ResultType && ErrorDescription is null;
 
+        [JsonIgnore]
         public new bool IsError => null == ResultType && null != ErrorDescription;
 
         public new Result<TOutput, TErrorType> SetOutput(TOutput value)
