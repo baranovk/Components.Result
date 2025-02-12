@@ -1,3 +1,6 @@
 namespace Components.Result;
 
-public interface IResultOutput { }
+public interface IResultOutput
+{
+    object? ToOutput();
+}

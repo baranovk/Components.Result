@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace Components.Result
 {
     public class Result
@@ -174,7 +172,6 @@ namespace Components.Result
 
         #region Properties
 
-        [JsonInclude]
         public TOutput? Output { get; protected set; }
 
         #endregion
@@ -218,6 +215,8 @@ namespace Components.Result
             throw new InvalidOperationException(nameof(EnsureOutput));
         }
 
+        public object? ToOutput() => EnsureOutput();
+
         #endregion
     }
 
@@ -260,7 +259,6 @@ namespace Components.Result
 
         #endregion
 
-        [JsonIgnore]
         public new ErrorDescription<TErrorType>? ErrorDescription
         {
             get => _errorDescription;
@@ -272,10 +270,8 @@ namespace Components.Result
             }
         }
 
-        [JsonIgnore]
         public new bool IsSuccess => null != ResultType && ErrorDescription is null;
 
-        [JsonIgnore]
         public new bool IsError => null == ResultType && null != ErrorDescription;
 
         public new Result<TOutput, TErrorType> SetOutput(TOutput value)
